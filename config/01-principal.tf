@@ -75,7 +75,7 @@ module "vms_kubernetes" {
 
 module "vms_kworkers" {
   source          = "../modulos/ec2-kworkers"
-  count           = 2
+  count           = 1
   NUMERO          = count.index
   NOMBRE_PROYECTO = var.NOMBRE_PROYECTO
 
