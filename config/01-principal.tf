@@ -57,7 +57,7 @@ module "firewall_ec2_publico" {
 # }
 
 module "vms_kubernetes" {
-  source          = "../modulos/ec2-kmaster"
+  source          = "../modulos/CRI-O/ec2-kmaster"
   count           = 1
   NUMERO          = count.index
   NOMBRE_PROYECTO = var.NOMBRE_PROYECTO
@@ -74,7 +74,7 @@ module "vms_kubernetes" {
 }
 
 module "vms_kworkers" {
-  source          = "../modulos/ec2-kworkers"
+  source          = "../modulos/CRI-O/ec2-kworkers"
   count           = 1
   NUMERO          = count.index
   NOMBRE_PROYECTO = var.NOMBRE_PROYECTO
