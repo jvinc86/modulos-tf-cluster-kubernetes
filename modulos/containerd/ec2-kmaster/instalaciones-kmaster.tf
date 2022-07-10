@@ -21,8 +21,8 @@ variable "INSTALA_CONTAINERD" {
     "swapoff -a",
     "sudo sed -i '/swap/d' /etc/fstab",
 
-    "echo \"[PASO 2] Agregar configuraciones necesarias para KUBERNETES necesarias en el Kernel \"",
-    "sudo cp /tmp/kubernetes.conf /etc/sysctl.d/kubernetes.conf",
+    "echo \"[PASO 2] Agregar configuraciones para KUBERNETES necesarias en el Kernel \"",
+    "sudo cp /tmp/k8s.conf /etc/sysctl.d/k8s.conf",
     "sudo sysctl --system >/dev/null 2>&1",
 
     "echo \"[PASO 3] Habilitar y cargar modulos necesarios para CONTAINERD en el Kernel \"",

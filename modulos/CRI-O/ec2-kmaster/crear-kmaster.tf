@@ -29,13 +29,13 @@ resource "aws_instance" "mi_vm" {
   }
 
   provisioner "file" {
-      source      = "${path.module}/kubernetes.conf"
-      destination = "/tmp/kubernetes.conf"
+      source      = "${path.module}/k8s.conf"
+      destination = "/tmp/k8s.conf"
   }
-  provisioner "file" {
-      source      = "${path.module}/02-cgroup-manager.conf"
-      destination = "/tmp/02-cgroup-manager.conf"
-  }
+#   provisioner "file" {
+#       source      = "${path.module}/02-cgroup-manager.conf"
+#       destination = "/tmp/02-cgroup-manager.conf"
+#   }
   provisioner "remote-exec" { inline = var.INSTALA_CRI_O }
   provisioner "remote-exec" { inline = var.INSTALA_KUBE_COMPONENTES }
   provisioner "remote-exec" { inline = var.INICIA_MASTER_K8S }
