@@ -87,6 +87,6 @@ variable "UNIR_NODO_AL_CLUSTER_K8S" {
     "rm -rf ~/$comando",
 
     "echo \"[PASO 4] Ejecutar el comando JOIN desde el archivo traido con SSHPASS\"", 
-    "bash ~/comando_con_sudo.sh",
+    "bash ~/comando_con_sudo.sh >/dev/null 2>&1",
   ]
 }
