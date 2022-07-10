@@ -14,7 +14,18 @@ data "amazon-ami" "ubuntu_22_04" {
 
   filters = {
     virtualization-type = "hvm"
-    name                = "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"
+    name                = "ubuntu/images/hvm-ssd/ubuntu-*-22.04-amd64-server-*"
+    root-device-type    = "ebs"
+  }
+}
+
+data "amazon-ami" "ubuntu_20_04" {
+  owners      = ["099720109477"]
+  most_recent = true
+
+  filters = {
+    virtualization-type = "hvm"
+    name                = "ubuntu/images/hvm-ssd/ubuntu-*-20.04-amd64-server-*"
     root-device-type    = "ebs"
   }
 }
@@ -27,7 +38,7 @@ source "amazon-ebs" "mi-ubuntu-personalizada" {
   communicator  = "ssh"
   ami_name      =  "bootstrap_packer_ami_{{timestamp}}"
   tags = {
-      Name = "mi-super-ami"
+      Name = "mi-super-ubuntu"
       OS_Version = "Ubuntu"
       Release = "Latest"
       Base_AMI_Name = "{{ .SourceAMIName }}"

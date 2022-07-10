@@ -17,7 +17,7 @@ variable "INSTALA_DOCKER" {
 variable "INSTALA_CONTAINERD" {
   type = list(any)
   default = [
-    "echo \"[PASO 1] Apagar y deshabilitar la SWAP\"",
+    "echo \"[PASO 1] Apagar y deshabilitar la SWAP (memoria en disco)\"",
     "swapoff -a",
     "sudo sed -i '/swap/d' /etc/fstab",
 
