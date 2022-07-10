@@ -23,13 +23,13 @@ resource "aws_instance" "mi_vm" {
   } 
 
   provisioner "file" {
-      source      = "${path.module}/containerd.conf"
-      destination = "/tmp/containerd.conf"
+      source      = "${path.module}/cri-o.conf"
+      destination = "/tmp/cri-o.conf"
   }
 
   provisioner "file" {
-      source      = "${path.module}/kubernetes.conf"
-      destination = "/tmp/kubernetes.conf"
+      source      = "${path.module}/k8s.conf"
+      destination = "/tmp/k8s.conf"
   }
   provisioner "remote-exec" { inline = var.INSTALA_CRI_O }
   provisioner "remote-exec" { inline = var.INSTALA_KUBE_COMPONENTES }
