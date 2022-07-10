@@ -1,57 +1,42 @@
-variable "INSTALA_DOCKER" {
-  type = list(any)
-  default = [
-    "sudo apt remove docker docker-engine docker.io containerd runc",
-    "sudo apt update",
-    "sudo apt install -y ca-certificates curl gnupg lsb-release",
-    "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
-    "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
-    "sudo apt update -y",
-    "sudo apt install -y docker-ce docker-ce-cli containerd.io",
-    "sudo usermod -aG docker ansible",
-    "sudo systemctl start docker",
-    "sudo systemctl enable docker",
-  ]
-}
-
 variable "INSTALA_CRI_O" {
   type = list(any)
   default = [
     "echo \"[PASO 1] Apagar y deshabilitar la SWAP (memoria en disco)\"",
-    "swapoff -a",
+    "sudo swapoff -a",
     "sudo sed -i '/swap/d' /etc/fstab",
 
-
     "echo \"[PASO 2] Agregar configuraciones para KUBERNETES necesarias en el Kernel \"",
-    "sudo cp /tmp/kubernetes.conf /etc/sysctl.d/kubernetes.conf",
+    "sudo cp /tmp/k8s.conf /etc/sysctl.d/k8s.conf",
     "sudo sysctl --system >/dev/null 2>&1",
-
 
     "echo \"[PASO 3] Habilitar y cargar modulos necesarios para CRI-O en el Kernel \"",
     "sudo cp /tmp/cri-o.conf /etc/modules-load.d/cri-o.conf",
     "sudo modprobe overlay",
     "sudo modprobe br_netfilter",
 
-
     "echo \"[PASO 4] Instalar CRI-O \"",
+    "echo \"   [4.1] Seleccionar cual OS Linux (ver pagina: cri-o.io) y cual VERSION de CRI-O\"",
     "OS=xUbuntu_20.04",
-    "VERSION=1.23",
-    "echo \"deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list",
-    "echo \"deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.list",
-    "curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/Release.key | sudo apt-key add -",
-    "curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | sudo apt-key add -",
-    "sudo apt update -y",
-    "sudo apt install -y cri-o cri-o-runc",
+    "VERSION_CRI_O=1.24",
 
+    "echo \"   [4.2] Agregar repositorio APT de KUBIC y CRI-O\"",
+    "echo \"deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list >/dev/null 2>&1",
+    "echo \"deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION_CRI_O/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION_CRI_O.list >/dev/null 2>&1",
+    "sudo mkdir -p /usr/share/keyrings",
+    "curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg >/dev/null 2>&1",
+    "curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION_CRI_O/$OS/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg >/dev/null 2>&1",
 
-    "echo \"[PASO 5] Copiar archivo que pide Kubernetes llamado 02-cgroup-manager.conf\"",
-    "sudo cp /tmp/02-cgroup-manager.conf /etc/crio/crio.conf.d/02-cgroup-manager.conf",
+    "echo \"   [4.3] Instalar:  cri-o   y  cri-o-runc \"",    
+    "sudo apt update >/dev/null 2>&1",
+    "sudo apt install -y cri-o cri-o-runc >/dev/null 2>&1",
+ 
+    "echo \"[PASO 5] Reiniciar y habilitar servicio CRI-O \"",
+    "sudo systemctl daemon-reload",
+    "sudo systemctl start crio.service",
+    "sudo systemctl enable crio.service >/dev/null 2>&1",
 
-  
-    "echo \"[PASO 6] Reiniciar y habilitar servicio CRI-O \"",
-    "sudo systemctl restart crio",
-    "sudo systemctl enable crio >/dev/null 2>&1",
-
+    "echo \"[PASO 6] Instalar CRI Tools\"",
+    "sudo apt install -y cri-tools >/dev/null 2>&1",
 
     "echo \"[PASO 7] Configurar ALIAS linux, la MERMA de la MERMELADA\"",
     "git clone https://github.com/jvinc86/alias-ubuntu.git >/dev/null 2>&1",
@@ -61,7 +46,6 @@ variable "INSTALA_CRI_O" {
     "cd .. && rm -rf alias-ubuntu/",
   ]
 }
-
 
 variable "INSTALA_KUBE_COMPONENTES" {
   type = list(any)

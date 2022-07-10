@@ -1,19 +1,3 @@
-variable "INSTALA_DOCKER" {
-  type = list(any)
-  default = [
-    "sudo apt remove docker docker-engine docker.io containerd runc",
-    "sudo apt update",
-    "sudo apt install -y ca-certificates curl gnupg lsb-release",
-    "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
-    "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
-    "sudo apt update -y",
-    "sudo apt install -y docker-ce docker-ce-cli containerd.io",
-    "sudo usermod -aG docker ansible",
-    "sudo systemctl start docker",
-    "sudo systemctl enable docker",
-  ]
-}
-
 variable "INSTALA_CRI_O" {
   type = list(any)
   default = [
@@ -36,11 +20,11 @@ variable "INSTALA_CRI_O" {
     "VERSION=1.24",
 
     "echo \"   [4.2] Agregar repositorio APT de KUBIC y CRI-O\"",
-    "echo \"deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list",
-    "echo \"deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.list",
+    "echo \"deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list >/dev/null 2>&1",
+    "echo \"deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.list >/dev/null 2>&1",
     "sudo mkdir -p /usr/share/keyrings",
-    "curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg",
-    "curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg",
+    "curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg >/dev/null 2>&1",
+    "curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg >/dev/null 2>&1",
 
     "echo \"   [4.3] Instalar:  cri-o   y  cri-o-runc \"",    
     "sudo apt update >/dev/null 2>&1",
