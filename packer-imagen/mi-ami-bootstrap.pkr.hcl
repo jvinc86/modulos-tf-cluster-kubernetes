@@ -32,7 +32,7 @@ data "amazon-ami" "ubuntu_20_04" {
 
 source "amazon-ebs" "mi-ubuntu-personalizada" {
   region        =  "eu-west-3"
-  source_ami    =  data.amazon-ami.ubuntu_20_04.id
+  source_ami    =  data.amazon-ami.ubuntu_22_04.id
   instance_type =  "t2.micro"
   ssh_username  =  "ubuntu"
   communicator  = "ssh"
