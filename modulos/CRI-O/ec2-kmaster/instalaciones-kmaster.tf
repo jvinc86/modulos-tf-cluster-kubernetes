@@ -31,28 +31,20 @@ variable "INSTALA_CRI_O" {
     "sudo modprobe br_netfilter",
 
     "echo \"[PASO 4] Instalar CRI-O \"",
-    "echo \"   [4.1] Seleccionar OS Linux y VERSION de Kube componentes\"",
+    "echo \"   [4.1] Seleccionar cual OS Linux (ver pagina: cri-o.io) y cual VERSION de CRI-O\"",
     "OS=xUbuntu_20.04",
-    "VERSION=1.23",
+    "VERSION=1.24",
 
+    "echo \"   [4.2] Agregar repositorio APT de KUBIC y CRI-O\"",
     "echo \"deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list",
     "echo \"deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.list",
-
     "sudo mkdir -p /usr/share/keyrings",
     "curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg",
     "curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg",
 
-    # "echo \"   [4.2] Agregar APT repositorio de Kubic\"",
-    # "echo \"deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list",
-    # "curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | sudo apt-key add - > /dev/null 2>&1",
-
-    # "echo \"   [4.3] Agregar APT repositorio de CRI-O\"", 
-    # "echo \"deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.list",
-    # "curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/Release.key | sudo apt-key add - > /dev/null 2>&1",
-
-    "echo \"   [4.4] Instalar:  cri-o   y  cri-o-runc \"",    
+    "echo \"   [4.3] Instalar:  cri-o   y  cri-o-runc \"",    
     "sudo apt update >/dev/null 2>&1",
-    "sudo apt install -y cri-o cri-o-runc",
+    "sudo apt install -y cri-o cri-o-runc >/dev/null 2>&1",
  
     "echo \"[PASO 5] Reiniciar y habilitar servicio CRI-O \"",
     "sudo systemctl daemon-reload",
@@ -60,7 +52,7 @@ variable "INSTALA_CRI_O" {
     "sudo systemctl enable crio.service >/dev/null 2>&1",
 
     "echo \"[PASO 6] Instalar CRI Tools\"",
-    "sudo apt install -y cri-tools",
+    "sudo apt install -y cri-tools >/dev/null 2>&1",
 
     "echo \"[PASO 7] Configurar ALIAS linux, la MERMA de la MERMELADA\"",
     "git clone https://github.com/jvinc86/alias-ubuntu.git >/dev/null 2>&1",
@@ -96,16 +88,16 @@ variable "INICIA_MASTER_K8S" {
   type = list(any)
   default = [
     "echo \"[PASO 1] Descargar IMAGENES para Cluster KUBERNETES (api, scheduler, etcd, etc.)\"",
-    "sudo kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock --kubernetes-version v1.24.0",
+    "sudo kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock --kubernetes-version v1.24.0 >/dev/null 2>&1",
 
     "echo \"[PASO 2] Inicializar MASTER K8s (CONTROL PLANE) con la herramienta kubeadm\"",
-    "sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=v1.24.0 --apiserver-advertise-address=10.0.150.90 --cri-socket unix:///var/run/crio/crio.sock | tee ~/01-Logs-inicializacion-master.log",
+    "sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=v1.24.0 --apiserver-advertise-address=10.0.150.90 --cri-socket unix:///var/run/crio/crio.sock | tee ~/01-Logs-inicializacion-master.log >/dev/null 2>&1",
 
     "echo \"[PASO 3] TRUCAZO: Guarda en archivo el comando JOIN que usaran los WORKER NODES\"",
     "sudo kubeadm token create --print-join-command | tee ~/comando_JOIN_para_workers.sh",
 
     "echo \"[PASO 4] Instalar Red CALICO (contenedores que gestionan las redes)\"",
-    "sudo kubectl --kubeconfig=/etc/kubernetes/admin.conf create -f https://docs.projectcalico.org/v3.18/manifests/calico.yaml | tee ~/02-Logs-deploy-red-calisto.log",
+    "sudo kubectl --kubeconfig=/etc/kubernetes/admin.conf create -f https://docs.projectcalico.org/v3.18/manifests/calico.yaml | tee ~/02-Logs-deploy-red-calisto.log >/dev/null 2>&1",
 
     "echo \"[PASO 5] Para mi usuario, copiar /etc/kubernetes/admin.conf en mi HOME\"",
     "mkdir -p ~/.kube",
