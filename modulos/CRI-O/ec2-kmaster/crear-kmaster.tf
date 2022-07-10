@@ -36,9 +36,9 @@ resource "aws_instance" "mi_vm" {
       source      = "${path.module}/02-cgroup-manager.conf"
       destination = "/tmp/02-cgroup-manager.conf"
   }
-#   provisioner "remote-exec" { inline = var.INSTALA_CRI_O }
-#   provisioner "remote-exec" { inline = var.INSTALA_KUBE_COMPONENTES }
-#   provisioner "remote-exec" { inline = var.INICIA_MASTER_K8S }
+  provisioner "remote-exec" { inline = var.INSTALA_CRI_O }
+  provisioner "remote-exec" { inline = var.INSTALA_KUBE_COMPONENTES }
+  provisioner "remote-exec" { inline = var.INICIA_MASTER_K8S }
 }
 
 output la_ip_publica { value = aws_instance.mi_vm.public_ip }
