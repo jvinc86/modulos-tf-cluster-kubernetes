@@ -73,26 +73,26 @@ module "vms_kubernetes" {
   LLAVE_SSH_PUBLICA = aws_key_pair.llave-ssh-neo.key_name
 }
 
-module "vms_kworkers" {
-  source          = "../modulos/CRI-O/ec2-kworkers"
-  count           = 1
-  NUMERO          = count.index
-  NOMBRE_PROYECTO = var.NOMBRE_PROYECTO
+# module "vms_kworkers" {
+#   source          = "../modulos/CRI-O/ec2-kworkers"
+#   count           = 1
+#   NUMERO          = count.index
+#   NOMBRE_PROYECTO = var.NOMBRE_PROYECTO
 
-  LISTA_NOMBRE_SERVIDORES = ["kworker1", "kworker2"]
-  TIPO_INSTANCIA          = "t2.medium"
-  TIPO_RED                = "public"
-  ID_SUBRED               = module.subred_publica.id_de_la_subred
-  IP_SERVIDOR             = "10.0.150.9${count.index + 1}"
+#   LISTA_NOMBRE_SERVIDORES = ["kworker1", "kworker2"]
+#   TIPO_INSTANCIA          = "t2.medium"
+#   TIPO_RED                = "public"
+#   ID_SUBRED               = module.subred_publica.id_de_la_subred
+#   IP_SERVIDOR             = "10.0.150.9${count.index + 1}"
 
-  IMAGEN_OS         = data.aws_ami.os_ubuntu.id
-  IDS_SEC_GROUPS    = [module.firewall_ec2_publico.id_de_sg]
-  LLAVE_SSH_PUBLICA = aws_key_pair.llave-ssh-neo.key_name
+#   IMAGEN_OS         = data.aws_ami.os_ubuntu.id
+#   IDS_SEC_GROUPS    = [module.firewall_ec2_publico.id_de_sg]
+#   LLAVE_SSH_PUBLICA = aws_key_pair.llave-ssh-neo.key_name
 
-  depends_on = [
-    module.vms_kubernetes
-  ]
-}
+#   depends_on = [
+#     module.vms_kubernetes
+#   ]
+# }
 
 # --------------------- INSTANCIAS EC2 PRIVADAS ---------------------
 # module "vms_jenkins" {

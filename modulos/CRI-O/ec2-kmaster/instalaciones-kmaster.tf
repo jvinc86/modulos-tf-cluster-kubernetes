@@ -35,7 +35,7 @@ variable "INSTALA_CRI_O" {
 
     "echo \"[PASO 4] Instalar CRI-O \"",
     "OS=xUbuntu_20.04",
-    "VERSION=1.24.1",
+    "VERSION=1.23",
     "echo \"deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list",
     "echo \"deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/ /\" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.list",
     "curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/Release.key | sudo apt-key add -",
